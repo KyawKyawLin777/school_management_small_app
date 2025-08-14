@@ -1,5 +1,16 @@
 @include('layouts.header')
+<style>
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+        background: #fff;
+        border: 1px solid #ddd;
+    }
 
+    .suggestion-item:hover {
+        background: #f0f0f0;
+    }
+</style>
 <div class="wrapper">
     <!-- Sidebar -->
     @include('layouts.sidebar')
@@ -97,22 +108,29 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label for="student_name">Name</label>
-                                            <input type="text" class="form-control" id="student_name"
-                                                name="student_name" placeholder="Enter Name">
+                                            <input type="text" class="form-control" id="student_name" name="name"
+                                                placeholder="Enter Name" autocomplete="off" required>
+                                            <input type="hidden" class="form-control" id="student_id" name="student_id"
+                                                autocomplete="off" required>
+                                            <div id="suggestions" class="list-group position-absolute w-100"
+                                                style="z-index:1000; display:none;"></div>
+
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <label for="grade">Grade</label>
-                                            <input type="text" class="form-control" id="grade" name="grade"
-                                                placeholder="Enter Grade">
+                                            <input type="text" class="form-control" id="grade_name" name="grade_name"
+                                                placeholder="Enter Grade" required>
+                                            <input type="hidden" class="form-control" id="grade_id" name="grade_id"
+                                                placeholder="Enter Grade" required>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <label for="gr_number">Gr Number</label>
-                                            <input type="text" class="form-control" id="gr_number" name="gr_number"
-                                                placeholder="Enter GR Number">
+                                            <input type="text" class="form-control" id="gr_number" name="gr_no"
+                                                placeholder="Enter GR Number" required>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -141,7 +159,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h4 class="card-title">Student Attendance Table</h4>
+                                <h4 class="card-title">Student Management Table</h4>
 
                             </div>
                         </div>
@@ -155,25 +173,44 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Name</th>
+                                            <th>Grade</th>
+                                            <th>Gr Number</th>
+                                            <th>Attendance</th>
+                                            <th>History</th>
                                             <th style="width: 10%">Action</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        {{-- @foreach ($grades as $key => $grade)
+                                        @foreach ($attendances as $key => $attendance)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $grade->name }}</td>
-
+                                                <td>{{ $attendance->name }}</td>
+                                                <td>{{ $attendance->grade ? $attendance->grade->name : '' }}</td>
+                                                <td>{{ $attendance->gr_no }}</td>
+                                                <td>
+                                                    @if ($attendance->attendance == 'Present')
+                                                        <span class="badge badge-success fw-bold">Marked :
+                                                            Present</span>
+                                                    @else
+                                                        <span class="badge badge-danger fw-bold">Marked :
+                                                            Absent</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a href="{{ url('attendance_history', $attendance->student_id) }}"
+                                                        class="btn btn-primary">View</a>
+                                                </td>
                                                 <td>
                                                     <div class="form-button-action">
-                                                        <a href="{{ route('grade.edit', $grade->id) }}"
+                                                        <a href="{{ route('student_attendance.edit', $attendance->id) }}"
                                                             data-bs-toggle="tooltip" title="Edit Task"
                                                             class="btn btn-link btn-primary btn-lg"
                                                             data-original-title="Edit Task">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        <form action="{{ route('grade.destroy', $grade->id) }}"
+                                                        <form
+                                                            action="{{ route('student_attendance.destroy', $attendance->id) }}"
                                                             method="POST" class="delete-form">
                                                             @csrf
                                                             @method('DELETE')
@@ -188,7 +225,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach --}}
+                                        @endforeach
 
 
                                     </tbody>
@@ -216,6 +253,60 @@
     document.querySelectorAll('.removeRowButton').forEach(function(button) {
         button.addEventListener('click', function() {
             $('#addRowModal').modal('hide');
+        });
+    });
+
+    $(document).ready(function() {
+        // Suggestion dropdown
+        $('#student_name').on('keyup', function() {
+            let query = $(this).val();
+            $.ajax({
+                url: "{{ route('get.attendance') }}",
+                type: "GET",
+                data: {
+                    name: query
+                },
+                success: function(data) {
+                    let suggestionBox = $('#suggestions');
+                    suggestionBox.empty();
+
+                    if (data.length > 0) {
+                        $.each(data, function(index, student) {
+                            suggestionBox.append(
+                                `<div class="suggestion-item"
+                                    data-name="${student.name}"
+                                    data-grade_id="${student.grade_id}"
+                                    data-gr_number="${student.gr_no}"
+                                    data-grade_name="${student.grade ? student.grade.name : ''}"
+                                    data-student_id="${student.id}">
+                                    ${student.name}
+                                </div>`
+                            );
+                        });
+                        suggestionBox.show();
+                    } else {
+                        suggestionBox.hide();
+                    }
+                }
+            });
+
+        });
+
+        // When clicking a suggestion
+        $(document).on('click', '.suggestion-item', function() {
+            let name = $(this).data('name');
+            let grade_id = $(this).data('grade_id');
+            let grade_name = $(this).data('grade_name');
+            let gr_number = $(this).data('gr_number');
+            let student_id = $(this).data('student_id');
+
+            $('#student_name').val(name);
+            $('#grade_id').val(grade_id);
+            $('#grade_name').val(grade_name);
+            $('#gr_number').val(gr_number);
+            $('#student_id').val(student_id);
+
+            $('#suggestions').hide();
         });
     });
 </script>

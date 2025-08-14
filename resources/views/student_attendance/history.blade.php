@@ -1,5 +1,16 @@
 @include('layouts.header')
+<style>
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+        background: #fff;
+        border: 1px solid #ddd;
+    }
 
+    .suggestion-item:hover {
+        background: #f0f0f0;
+    }
+</style>
 <div class="wrapper">
     <!-- Sidebar -->
     @include('layouts.sidebar')
@@ -34,7 +45,7 @@
             <div class="page-inner">
                 <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                     <div class="page-header">
-                        <h3 class="fw-bold mb-3">Subject</h3>
+                        <h3 class="fw-bold mb-3">Student Management History</h3>
                         <ul class="breadcrumbs mb-3">
                             <li class="nav-home">
                                 <a href="{{ url('dashboard') }}">
@@ -51,7 +62,7 @@
                                 <i class="fa-solid fa-chevron-right"></i>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Subject</a>
+                                <a href="#">Student Management History</a>
                             </li>
                         </ul>
                     </div>
@@ -87,64 +98,16 @@
                                 aria-label="Close"></button>
                         </div>
                     @endif
+
+
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h4 class="card-title">Subject Table</h4>
-                                <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
-                                    data-bs-target="#addRowModal">
-                                    <i class="fa fa-plus"></i>
-                                    Add Subject
-                                </button>
+                                <h4 class="card-title">Student Management History Table</h4>
+
                             </div>
                         </div>
                         <div class="card-body">
-                            <!-- Modal -->
-                            <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <form action="{{ route('subject.store') }}" method="POST">
-                                        <div class="modal-content">
-                                            <div class="modal-header border-0">
-                                                <h5 class="modal-title">
-                                                    <span class="fw-mediumbold">Add</span>
-                                                    <span class="fw-light">Subject</span>
-                                                </h5>
-                                                <button type="button" class="close removeRowButton"
-                                                    data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <div class="form-group">
-                                                            <label for="name">Name</label>
-                                                            <input type="text" class="form-control" id="name"
-                                                                name="name" placeholder="Enter Name" required />
-                                                        </div>
-                                                    </div>
-
-
-
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer border-0">
-                                                <button type="submit" id="addRowButton" class="btn btn-primary">
-                                                    Add
-                                                </button>
-
-                                                <button type="button" class="btn btn-danger removeRowButton"
-                                                    data-dismiss="modal">
-                                                    Close
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
 
 
 
@@ -154,25 +117,40 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Name</th>
+                                            <th>Grade</th>
+                                            <th>Gr Number</th>
+                                            <th>Attendance</th>
                                             <th style="width: 10%">Action</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        {{-- @foreach ($subjects as $key => $subject)
+                                        @foreach ($attendances as $key => $attendance)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $subject->name }}</td>
+                                                <td>{{ $attendance->name }}</td>
+                                                <td>{{ $attendance->grade ? $attendance->grade->name : '' }}</td>
+                                                <td>{{ $attendance->gr_no }}</td>
+                                                <td>
+                                                    @if ($attendance->attendance == 'Present')
+                                                        <span class="badge badge-success fw-bold">Marked :
+                                                            Present</span>
+                                                    @else
+                                                        <span class="badge badge-danger fw-bold">Marked :
+                                                            Absent</span>
+                                                    @endif
+                                                </td>
 
                                                 <td>
                                                     <div class="form-button-action">
-                                                        <a href="{{ route('subject.edit', $subject->id) }}"
+                                                        <a href="{{ route('student_attendance.edit', $attendance->id) }}"
                                                             data-bs-toggle="tooltip" title="Edit Task"
                                                             class="btn btn-link btn-primary btn-lg"
                                                             data-original-title="Edit Task">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        <form action="{{ route('subject.destroy', $subject->id) }}"
+                                                        <form
+                                                            action="{{ route('student_attendance.destroy', $attendance->id) }}"
                                                             method="POST" class="delete-form">
                                                             @csrf
                                                             @method('DELETE')
@@ -187,7 +165,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach --}}
+                                        @endforeach
 
 
                                     </tbody>
@@ -215,6 +193,60 @@
     document.querySelectorAll('.removeRowButton').forEach(function(button) {
         button.addEventListener('click', function() {
             $('#addRowModal').modal('hide');
+        });
+    });
+
+    $(document).ready(function() {
+        // Suggestion dropdown
+        $('#student_name').on('keyup', function() {
+            let query = $(this).val();
+            $.ajax({
+                url: "{{ route('get.attendance') }}",
+                type: "GET",
+                data: {
+                    name: query
+                },
+                success: function(data) {
+                    let suggestionBox = $('#suggestions');
+                    suggestionBox.empty();
+
+                    if (data.length > 0) {
+                        $.each(data, function(index, student) {
+                            suggestionBox.append(
+                                `<div class="suggestion-item"
+                                    data-name="${student.name}"
+                                    data-grade_id="${student.grade_id}"
+                                    data-gr_number="${student.gr_no}"
+                                    data-grade_name="${student.grade ? student.grade.name : ''}"
+                                    data-student_id="${student.id}">
+                                    ${student.name}
+                                </div>`
+                            );
+                        });
+                        suggestionBox.show();
+                    } else {
+                        suggestionBox.hide();
+                    }
+                }
+            });
+
+        });
+
+        // When clicking a suggestion
+        $(document).on('click', '.suggestion-item', function() {
+            let name = $(this).data('name');
+            let grade_id = $(this).data('grade_id');
+            let grade_name = $(this).data('grade_name');
+            let gr_number = $(this).data('gr_number');
+            let student_id = $(this).data('student_id');
+
+            $('#student_name').val(name);
+            $('#grade_id').val(grade_id);
+            $('#grade_name').val(grade_name);
+            $('#gr_number').val(gr_number);
+            $('#student_id').val(student_id);
+
+            $('#suggestions').hide();
         });
     });
 </script>

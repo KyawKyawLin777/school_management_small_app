@@ -31,12 +31,12 @@
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
-                <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
+                {{-- <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
                     <a href="{{ url('dashboard') }}">
                         <i class="fas fa-desktop"></i>
                         <p>Dashboard</p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item {{ request()->is('subject') ? 'active' : '' }}">
                     <a href="{{ route('subject.index') }}">
                         <i class="fa-solid fa-book"></i>
@@ -49,12 +49,15 @@
                         <p>Grade</p>
                     </a>
                 </li>
-                <li class="nav-item {{ request()->is('user') ? 'active' : '' }}">
-                    <a href="{{ url('user') }}">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                        <p>Teacher</p>
-                    </a>
-                </li>
+                @if (auth()->user()->is_admin == '1')
+                    <li class="nav-item {{ request()->is('user') ? 'active' : '' }}">
+                        <a href="{{ url('user') }}">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                            <p>Teacher</p>
+                        </a>
+                    </li>
+                @endif
+
 
                 <li class="nav-item">
                     <a href="{{ route('student.index') }}">

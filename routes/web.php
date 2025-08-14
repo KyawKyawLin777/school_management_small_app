@@ -59,6 +59,8 @@ Route::middleware('auth')->group(function () {
 
     //student_attendance
     Route::resource('/student_attendance', StudentAddendanceController::class);
+    Route::get('/get-attendance', [StudentAddendanceController::class, 'get_attendance'])->name('get.attendance');
+    Route::get('/attendance_history/{id}', [StudentAddendanceController::class, 'history']);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

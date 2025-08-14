@@ -64,7 +64,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('student.index') }}">
+                    <a href="{{ route('student_attendance.index') }}">
                         <i class="fa-solid fa-clipboard-user"></i>
                         <p>Student Management</p>
                     </a>

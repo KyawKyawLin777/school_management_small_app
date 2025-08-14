@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentAddendanceController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherAssignController;
 use App\Http\Controllers\UserController;
+use App\Models\StudentAttendance;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,6 +56,10 @@ Route::middleware('auth')->group(function () {
 
     //student
     Route::resource('/student', StudentController::class);
+
+    //student_attendance
+    Route::resource('/student_attendance', StudentAddendanceController::class);
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

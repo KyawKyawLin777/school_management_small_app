@@ -55,16 +55,18 @@
                         <p>Teacher</p>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a href="#">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                        <p>Teacher</p>
-                    </a>
-                </li> --}}
+
                 <li class="nav-item">
-                    <a href="#">
-                        <i class="fa-solid fa-graduation-cap"></i>
+                    <a href="{{ route('student.index') }}">
+                        <i class="fa-solid fa-user-graduate"></i>
                         <p>Student</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('student.index') }}">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                        <p>Student Management</p>
                     </a>
                 </li>
                 {{-- Dropdown --}}

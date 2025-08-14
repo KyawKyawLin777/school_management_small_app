@@ -34,7 +34,7 @@
             <div class="page-inner">
                 <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                     <div class="page-header">
-                        <h3 class="fw-bold mb-3">Subject</h3>
+                        <h3 class="fw-bold mb-3">Student</h3>
                         <ul class="breadcrumbs mb-3">
                             <li class="nav-home">
                                 <a href="{{ url('dashboard') }}">
@@ -51,7 +51,7 @@
                                 <i class="fa-solid fa-chevron-right"></i>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Subject</a>
+                                <a href="#">Student</a>
                             </li>
                         </ul>
                     </div>
@@ -90,11 +90,11 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h4 class="card-title">Subject Table</h4>
+                                <h4 class="card-title">Student Table</h4>
                                 <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
                                     data-bs-target="#addRowModal">
                                     <i class="fa fa-plus"></i>
-                                    Add Subject
+                                    Add Student
                                 </button>
                             </div>
                         </div>
@@ -102,12 +102,12 @@
                             <!-- Modal -->
                             <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
-                                    <form action="{{ route('subject.store') }}" method="POST">
+                                    <form action="{{ route('student.store') }}" method="POST">
                                         <div class="modal-content">
                                             <div class="modal-header border-0">
                                                 <h5 class="modal-title">
                                                     <span class="fw-mediumbold">Add</span>
-                                                    <span class="fw-light">Subject</span>
+                                                    <span class="fw-light">Student</span>
                                                 </h5>
                                                 <button type="button" class="close removeRowButton"
                                                     data-dismiss="modal" aria-label="Close">
@@ -125,6 +125,8 @@
                                                                 name="name" placeholder="Enter Name" required />
                                                         </div>
                                                     </div>
+
+
 
                                                 </div>
                                             </div>
@@ -157,7 +159,7 @@
                                     </thead>
 
                                     <tbody>
-                                        @foreach ($subjects as $key => $subject)
+                                        {{-- @foreach ($subjects as $key => $subject)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $subject->name }}</td>
@@ -185,7 +187,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @endforeach --}}
 
 
                                     </tbody>

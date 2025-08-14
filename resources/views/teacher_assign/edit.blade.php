@@ -33,7 +33,7 @@
         <div class="container">
             <div class="page-inner">
                 <div class="page-header">
-                    <h3 class="fw-bold mb-3">Subject Edit</h3>
+                    <h3 class="fw-bold mb-3">Teacher Assign Edit</h3>
                     <ul class="breadcrumbs mb-3">
                         <li class="nav-home">
                             <a href="{{ url('dashboard') }}">
@@ -50,26 +50,48 @@
                             <i class="fa-solid fa-chevron-right"></i>
                         </li>
                         <li class="nav-item">
-                            <a href="#">Subject Edit</a>
+                            <a href="#">Teacher Assign Edit</a>
                         </li>
                     </ul>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <form action="{{ route('subject.update', $subject->id) }}" method="POST">
+                        <form action="{{ url('teacher_assign_update', $assign->id) }}" method="POST">
                             @csrf
-                            @method('PUT')
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="card-title">Subject Edit</div>
+                                    <div class="card-title">User Edit</div>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
+
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input type="text" class="form-control" id="name" name="name"
-                                                    value="{{ $subject->name }}" required />
+                                                <label for="grade_id">Grade</label>
+                                                <select name="grade_id" class="form-control" id="grade_id" required>
+                                                    <option value="">Select Grade</option>
+                                                    @foreach ($grades as $grade)
+                                                        <option value="{{ $grade->id }}"
+                                                            {{ $grade->id == $assign->grade_id ? 'selected' : '' }}>
+                                                            {{ $grade->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="subject_id">Subject</label>
+                                                <select name="subject_id" class="form-control" id="subject_id" required>
+                                                    <option value="">Select Subject</option>
+                                                    @foreach ($subjects as $subject)
+                                                        <option value="{{ $subject->id }}"
+                                                            {{ $subject->id == $assign->subject_id ? 'selected' : '' }}>
+                                                            {{ $subject->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
 
@@ -77,7 +99,7 @@
                                 </div>
                                 <div class="card-action">
                                     <button class="btn btn-success">Update</button>
-                                    <a href="{{ route('subject.index') }}" class="btn btn-danger">Back</a>
+                                    <a href="{{ url('teacher_assign', $assign->id) }}" class="btn btn-danger">Back</a>
                                 </div>
                             </div>
                         </form>

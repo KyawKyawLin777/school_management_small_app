@@ -89,16 +89,13 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label for="type">Type</label>
-                                                <select name="type" id="type" class="form-control">
-                                                    <option value="" disabled {{ $user->type ? '' : 'selected' }}>
-                                                        Select Choose Type</option>
-                                                    <option value="Admin1"
-                                                        {{ $user->type == 'Admin1' ? 'selected' : '' }}>Admin1</option>
-                                                    <option value="Admin2"
-                                                        {{ $user->type == 'Admin2' ? 'selected' : '' }}>Admin2</option>
-                                                    <option value="Admin3"
-                                                        {{ $user->type == 'Admin3' ? 'selected' : '' }}>Admin3</option>
+                                                <label for="is_admin">Type</label>
+                                                <select name="is_admin" id="is_admin" class="form-control">
+                                                    <option selected>Select Choose Type</option>
+                                                    <option value="0" {{ $user->is_admin == 0 ? 'selected' : '' }}>
+                                                        Teacher</option>
+                                                    <option value="1" {{ $user->is_admin == 1 ? 'selected' : '' }}>
+                                                        Admin</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -130,10 +127,10 @@
             </div>
         </div>
 
-        @include('layouts.copyright')
+        {{-- @include('layouts.copyright') --}}
     </div>
 
-    @include('layouts.custom_color')
+    {{-- @include('layouts.custom_color') --}}
 </div>
 
 @include('layouts.footer')

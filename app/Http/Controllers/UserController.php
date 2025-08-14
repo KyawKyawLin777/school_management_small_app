@@ -29,7 +29,7 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->type = $request->type;
+        $user->is_admin = $request->is_admin;
 
         if ($request->type === 'Admin1') {
             $user->is_admin = 1;
@@ -72,7 +72,7 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->type = $request->type;
+        $user->is_admin = $request->is_admin;
         if ($request->password) {
             $user->password = bcrypt($request->password);
         }

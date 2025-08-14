@@ -34,7 +34,7 @@
             <div class="page-inner">
                 <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                     <div class="page-header">
-                        <h3 class="fw-bold mb-3">Teacher</h3>
+                        <h3 class="fw-bold mb-3">Teacher Assign</h3>
                         <ul class="breadcrumbs mb-3">
                             <li class="nav-home">
                                 <a href="{{ url('dashboard') }}">
@@ -51,7 +51,7 @@
                                 <i class="fa-solid fa-chevron-right"></i>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Teacher</a>
+                                <a href="#">Teacher Assign</a>
                             </li>
                         </ul>
                     </div>
@@ -90,11 +90,11 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h4 class="card-title">Teacher Table</h4>
+                                <h4 class="card-title">Teacher Assign Table</h4>
                                 <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
                                     data-bs-target="#addRowModal">
                                     <i class="fa fa-plus"></i>
-                                    Add Teacher
+                                    Add Teacher Assign
                                 </button>
                             </div>
                         </div>
@@ -102,12 +102,12 @@
                             <!-- Modal -->
                             <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
-                                    <form action="{{ url('user_store') }}" method="POST">
+                                    <form action="{{ url('teacher_assign_store', $teacher->id) }}" method="POST">
                                         <div class="modal-content">
                                             <div class="modal-header border-0">
                                                 <h5 class="modal-title">
                                                     <span class="fw-mediumbold">Add</span>
-                                                    <span class="fw-light">Teacher</span>
+                                                    <span class="fw-light">Teacher Assign</span>
                                                 </h5>
                                                 <button type="button" class="close removeRowButton"
                                                     data-dismiss="modal" aria-label="Close">
@@ -118,58 +118,37 @@
 
                                                 @csrf
                                                 <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <div class="form-group">
-                                                            <label for="name">Name</label>
-                                                            <input type="text" class="form-control" id="name"
-                                                                name="name" placeholder="Enter Name" required />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <div class="form-group">
-                                                            <label for="email">Email Address</label>
-                                                            <input type="email"
-                                                                class="form-control @error('email') is-invalid @enderror"
-                                                                id="email" name="email"
-                                                                placeholder="Enter Email Address"
-                                                                value="{{ old('email') }}" required />
-
-                                                            @error('email')
-                                                                <div class="invalid-feedback">
-                                                                    {{ $message }}
-                                                                </div>
-                                                            @enderror
-                                                        </div>
-
-                                                    </div>
 
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <label for="is_admin">Type</label>
-                                                            <select name="is_admin" id="is_admin"
-                                                                class="form-control">
-                                                                <option selected>Select Choose Type</option>
-                                                                <option value="0">Teacher</option>
-                                                                <option value="1">Admin</option>
+                                                            <label for="grade_id">Grade</label>
+                                                            <select name="grade_id" class="form-control" id="grade_id"
+                                                                required>
+                                                                <option value="">Select Grade</option>
+                                                                @foreach ($grades as $grade)
+                                                                    <option value="{{ $grade->id }}">
+                                                                        {{ $grade->name }}
+                                                                    </option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
+
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <label for="password">Password</label>
-                                                            <input type="password"
-                                                                class="form-control @error('password') is-invalid @enderror"
-                                                                id="password" name="password"
-                                                                placeholder="Enter Password" required />
-
-                                                            @error('password')
-                                                                <div class="invalid-feedback">
-                                                                    {{ $message }}
-                                                                </div>
-                                                            @enderror
+                                                            <label for="subject_id">Subject</label>
+                                                            <select name="subject_id" class="form-control"
+                                                                id="subject_id" required>
+                                                                <option value="">Select Subject</option>
+                                                                @foreach ($subjects as $subject)
+                                                                    <option value="{{ $subject->id }}">
+                                                                        {{ $subject->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
-
                                                     </div>
+
                                                 </div>
                                             </div>
                                             <div class="modal-footer border-0">
@@ -196,46 +175,38 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Type</th>
-                                            <th>Teacher Assign</th>
+                                            <th>Subject</th>
+                                            <th>Grade</th>
                                             <th style="width: 10%">Action</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        @foreach ($users as $key => $user)
+                                        @foreach ($assigns as $key => $assign)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>
-
-                                                    @if ($user->is_admin == 1)
-                                                        Admin
-                                                    @else
-                                                        Teacher
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($user->is_admin !== 1)
-                                                        <a href="{{ url('teacher_assign', $user->id) }}"
-                                                            class="btn btn-warning">Assign</a>
-                                                    @endif
-                                                </td>
+                                                <td>{{ $teacher->name }}</td>
+                                                <td>{{ $assign->subject ? $assign->subject->name : '' }}</td>
+                                                <td>{{ $assign->grade ? $assign->grade->name : '' }}</td>
                                                 <td>
                                                     <div class="form-button-action">
-                                                        <a href="{{ url('user_edit', $user->id) }}"
+                                                        <a href="{{ url('teacher_assign_edit', $assign->id) }}"
                                                             data-bs-toggle="tooltip" title="Edit Task"
                                                             class="btn btn-link btn-primary btn-lg"
                                                             data-original-title="Edit Task">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        <a href="{{ url('user_delete', $user->id) }}"
-                                                            id="alert_demo_8" data-bs-toggle="tooltip" title="Remove"
-                                                            class="btn btn-link btn-danger btn-lg">
-                                                            <i class="fa fa-times"></i>
-                                                        </a>
+                                                        <form action="{{ url('teacher_assign_delete', $assign->id) }}"
+                                                            method="POST" class="delete-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-link btn-danger btn-lg"
+                                                                data-bs-toggle="tooltip" title="Remove">
+                                                                <i class="fa fa-times"></i>
+                                                            </button>
+                                                        </form>
+
 
                                                     </div>
                                                 </td>

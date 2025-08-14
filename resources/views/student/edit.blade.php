@@ -33,7 +33,7 @@
         <div class="container">
             <div class="page-inner">
                 <div class="page-header">
-                    <h3 class="fw-bold mb-3">Subject Edit</h3>
+                    <h3 class="fw-bold mb-3">Student Edit</h3>
                     <ul class="breadcrumbs mb-3">
                         <li class="nav-home">
                             <a href="{{ url('dashboard') }}">
@@ -50,18 +50,18 @@
                             <i class="fa-solid fa-chevron-right"></i>
                         </li>
                         <li class="nav-item">
-                            <a href="#">Subject Edit</a>
+                            <a href="#">Student Edit</a>
                         </li>
                     </ul>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <form action="{{ route('subject.update', $subject->id) }}" method="POST">
+                        <form action="{{ route('student.update', $student->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="card-title">Subject Edit</div>
+                                    <div class="card-title">Student Edit</div>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -69,7 +69,33 @@
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" class="form-control" id="name" name="name"
-                                                    value="{{ $subject->name }}" required />
+                                                    placeholder="Enter Name" value="{{ $student->name }}" required />
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="grade_id">Grade</label>
+                                                <select name="grade_id" class="form-control" id="grade_id" required>
+                                                    <option value="">Select Grade</option>
+                                                    @foreach ($grades as $grade)
+                                                        <option value="{{ $grade->id }}"
+                                                            {{ $grade->id == $student->grade_id ? 'selected' : '' }}>
+                                                            {{ $grade->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="gr_no">Gr Number</label>
+                                                <input type="text" class="form-control" id="gr_no" name="gr_no"
+                                                    placeholder="Enter Gr Number" value="{{ $student->gr_no }}"
+                                                    required />
                                             </div>
                                         </div>
 
@@ -77,7 +103,7 @@
                                 </div>
                                 <div class="card-action">
                                     <button class="btn btn-success">Update</button>
-                                    <a href="{{ route('subject.index') }}" class="btn btn-danger">Back</a>
+                                    <a href="{{ route('student.index') }}" class="btn btn-danger">Back</a>
                                 </div>
                             </div>
                         </form>

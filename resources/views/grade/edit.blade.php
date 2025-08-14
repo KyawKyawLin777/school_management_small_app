@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="card-action">
                                     <button class="btn btn-success">Update</button>
-                                    <a href="{{ url('user') }}" class="btn btn-danger">Back</a>
+                                    <a href="{{ route('grade.index') }}" class="btn btn-danger">Back</a>
                                 </div>
                             </div>
                         </form>
